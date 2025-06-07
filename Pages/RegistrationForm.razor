@@ -1,0 +1,41 @@
+@page "/register"
+@using EventEase.Models
+@using EventEase.Services
+@inject UserService users
+
+@if (registered)
+{
+	<p>Thank you for registration!</p>
+	<a href="/card" class="btn btn-link">Add Event</a>
+}
+else
+{
+<EditForm Model="@user" OnValidSubmit="AddUser">
+	<DataAnnotationsValidator />
+	<ValidationSummary />
+
+	<div>
+		<label for="name">Name:</label>
+		<InputText id="name" @bind-Value="user.Name" class="form-control" />
+	</div>
+
+	<div>
+		<label for="email">email:</label>
+		<InputText id="email" @bind-Value="user.Email" class="form-control" />
+	</div>
+
+	<button type="submit" class="btn btn-primary">Sign In</button>
+</EditForm>
+}
+
+@code {
+	private User user = new();
+	private bool registered = false;
+
+	private void AddUser()
+	{
+		users.AddUser(user);
+		registered = users.Login(user.Email);
+		user = new User();
+	}
+}

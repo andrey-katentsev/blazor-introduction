@@ -1,0 +1,45 @@
+@page "/card"
+@using EventEase.Models
+@using EventEase.Services
+@inject EventService events
+
+<EditForm Model="@card" OnValidSubmit="AddEvent">
+	<DataAnnotationsValidator />
+	<ValidationSummary />
+
+	<div>
+		<label for="name">Name:</label>
+		<InputText id="name" @bind-Value="card.Name" class="form-control" />
+	</div>
+
+	<div>
+		<label for="date">Date:</label>
+		<InputDate id="date" @bind-Value="card.Date" class="form-control" />
+	</div>
+
+	<div>
+		<label for="comment">Location:</label>
+		<InputText id="comment" @bind-Value="card.Location" class="form-control" />
+	</div>
+
+	<button type="submit" class="btn btn-primary">Submit</button>
+</EditForm>
+
+<a href="/cards" class="btn btn-link">View Submitted Events</a>
+
+@if (submitted)
+{
+	<p>Thank you for adding the event!</p>
+}
+
+@code {
+	private Card card = new();
+	private bool submitted = false;
+
+	private void AddEvent()
+	{
+		events.AddCard(card);
+		card = new Card();
+		submitted = true;
+	}
+}

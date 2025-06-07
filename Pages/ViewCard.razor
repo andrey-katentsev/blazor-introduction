@@ -1,0 +1,35 @@
+@page "/view/{eventID:int}"
+@using EventEase.Models
+@using EventEase.Services
+@inject EventService events
+
+<h3>Name: @card.Name</h3>
+
+<table class="table">
+	<thead>
+		<tr>
+			<th>Attendees</th>
+		</tr>
+	</thead>
+	<tbody>
+		@foreach (var user in events.GetAttendees(eventID))
+		{
+			<tr>
+				<td>@user.Name</td>
+			</tr>
+		}
+	</tbody>
+</table>
+
+<a href="/cards" class="btn btn-link">View Submitted Events</a>
+
+@code {
+	protected override void OnParametersSet()
+	{
+		Console.WriteLine($"OnParametersSet: event id = {eventID}");
+		card = events.GetCard(eventID);
+	}
+	private Card card = new();
+	[Parameter]
+	public int eventID { get; set; }
+}

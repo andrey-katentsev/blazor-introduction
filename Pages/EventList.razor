@@ -1,0 +1,42 @@
+@page "/cards"
+@using EventEase.Services;
+@inject EventService events
+@inject UserService users
+
+<h3>Submitted Events</h3>
+
+<table class="table">
+	<thead>
+		<tr>
+			<th>ID</th>
+			<th>Name</th>
+			<th>Date</th>
+			<th>Location</th>
+			<th></th>
+			</tr>
+		</thead>
+	<tbody>
+		@foreach (var card in events.GetCards())
+		{
+			<tr>
+				<td><a href="/view/@card.Id">@card.Id</a></td>
+				<td>@card.Name</td>
+				<td>@card.Date</td>
+				<td>@card.Location</td>
+				<td><button class="btn btn-primary" @onclick="() => AttendEvent(card.Id)">Attend</button></td>
+			</tr>
+		}
+		</tbody>
+</table>
+
+<a href="/card" class="btn btn-link">Add Event</a>
+
+@code {
+	public void AttendEvent(int id)
+	{
+		var user = users.CurrentUser();
+		Console.WriteLine($"Attending Event: {id}");
+		Console.WriteLine($"Current User: {user.Name}");
+		events.AddAttendee(id, user);
+	}
+}
